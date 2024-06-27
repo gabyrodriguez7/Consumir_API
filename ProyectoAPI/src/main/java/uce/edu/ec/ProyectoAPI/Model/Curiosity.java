@@ -1,13 +1,11 @@
 package uce.edu.ec.ProyectoAPI.Model;
 
-import uce.edu.ec.ProyectoAPI.Interface.MarsRover;
 import uce.edu.ec.ProyectoAPI.Service.ConsumerAPI;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Curiosity implements MarsRover {
+public class Curiosity implements uce.edu.ec.ProyectoAPI.Interface.MarsRover {
 
     private final ConsumerAPI consumerAPI;
 
@@ -21,7 +19,7 @@ public class Curiosity implements MarsRover {
     }
 
     @Override
-    public Map<String, List<MarsRoverPhoto>> fetchPhotosByCameraAndSol(String camera, int sol) {
+    public Map<String, List<MarsRover>> fetchPhotosByCameraAndSol(String camera, int sol) {
         return consumerAPI.getPhotosByRoverCameraAndSol("curiosity", camera, sol);
     }
 

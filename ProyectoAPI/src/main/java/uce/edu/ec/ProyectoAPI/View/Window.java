@@ -1,7 +1,7 @@
 package uce.edu.ec.ProyectoAPI.View;
 
 import uce.edu.ec.ProyectoAPI.Controller.Container;
-import uce.edu.ec.ProyectoAPI.Model.MarsRoverPhoto;
+import uce.edu.ec.ProyectoAPI.Model.MarsRover;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +83,7 @@ public class Window extends JFrame {
             limpiarPanelMiniaturas();
             new Thread(() -> {
                 try {
-                    Map<String, List<MarsRoverPhoto>> fotos = container.fetchAndPrintPhotosByCameraAndSol(nombreRover.toLowerCase(), camara, sol, areaInfo);
+                    Map<String, List<MarsRover>> fotos = container.fetchAndPrintPhotosByCameraAndSol(nombreRover.toLowerCase(), camara, sol, areaInfo);
                     SwingUtilities.invokeLater(() -> {
                         mostrarFotos(fotos, nombreRover, camara, sol);
                         int totalResultados = fotos.values().stream().mapToInt(List::size).sum();
@@ -98,7 +98,7 @@ public class Window extends JFrame {
         panel.add(boton);
     }
 
-    private void mostrarFotos(Map<String, List<MarsRoverPhoto>> fotosPorCamara, String nombreRover, String camara, int sol) {
+    private void mostrarFotos(Map<String, List<MarsRover>> fotosPorCamara, String nombreRover, String camara, int sol) {
         fotosPorCamara.values().forEach(photos -> photos.forEach(photo -> {
             JPanel panelFoto = crearPanelFoto(photo);
             panelMiniaturas.add(panelFoto);
@@ -113,7 +113,7 @@ public class Window extends JFrame {
         });
     }
 
-    private JPanel crearPanelFoto(MarsRoverPhoto foto) {
+    private JPanel crearPanelFoto(MarsRover foto) {
         JPanel panel = new JPanel(new BorderLayout());
 
         JLabel etiquetaInfo = new JLabel("<html>ID: " + foto.getPhotoId() + ", Fecha: " + foto.getEarthDate() +

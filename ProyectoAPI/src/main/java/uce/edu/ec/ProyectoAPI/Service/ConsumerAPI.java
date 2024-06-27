@@ -2,7 +2,7 @@ package uce.edu.ec.ProyectoAPI.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import uce.edu.ec.ProyectoAPI.Model.MarsRoverPhoto;
+import uce.edu.ec.ProyectoAPI.Model.MarsRover;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,8 +25,8 @@ public class ConsumerAPI {
         this.objectMapper = new ObjectMapper();
     }
 
-    public Map<String, List<MarsRoverPhoto>> getPhotosByRoverCameraAndSol(String rover, String camera, int sol) {
-        Map<String, List<MarsRoverPhoto>> photosByCamera = new HashMap<>();
+    public Map<String, List<MarsRover>> getPhotosByRoverCameraAndSol(String rover, String camera, int sol) {
+        Map<String, List<MarsRover>> photosByCamera = new HashMap<>();
         try {
             String url = String.format("%s/%s/photos?sol=%d&camera=%s&api_key=%s", BASE_URL, rover, sol, camera, API_KEY);
             HttpRequest request = HttpRequest.newBuilder()
@@ -40,7 +40,7 @@ public class ConsumerAPI {
                 JsonNode photosNode = root.path("photos");
 
                 for (JsonNode photoNode : photosNode) {
-                    MarsRoverPhoto photo = new MarsRoverPhoto();
+                    MarsRover photo = new MarsRover();
                     photo.setPhotoId(photoNode.path("id").asInt());
                     photo.setImageUrl(photoNode.path("img_src").asText());
                     photo.setEarthDate(photoNode.path("earth_date").asText());
