@@ -35,11 +35,10 @@ public class Container {
         if (rover != null) {
             Map<String, List<MarsRoverPhoto>> photos = rover.fetchPhotosByCameraAndSol(camera, sol);
             if (photos.isEmpty()) {
-                infoTextArea.setText("\nNo se encontraron fotos para el rover " + roverName + ", cámara " + camera + " y sol " + sol + "\n");
+                infoTextArea.setText("\nNo se encontraron fotos para el rover " + roverName + ", camara " + camera + " y sol " + sol + "\n");
             }
             return photos;
         } else {
-            System.out.println("Rover not found: " + roverName);
             return null;
         }
     }

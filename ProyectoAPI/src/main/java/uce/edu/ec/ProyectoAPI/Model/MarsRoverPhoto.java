@@ -1,7 +1,7 @@
 package uce.edu.ec.ProyectoAPI.Model;
 
 public class MarsRoverPhoto {
-    private int photoid;
+    private int photoId;
     private String imageUrl;
     private String earthDate;
 
@@ -17,13 +17,14 @@ public class MarsRoverPhoto {
     public MarsRoverPhoto() {
     }
 
-    public int getPhotoid() {
-        return photoid;
+    public int getPhotoId() {
+        return photoId;
     }
 
-    public void setPhotoid(int photoid) {
-        this.photoid = photoid;
+    public void setPhotoId(int photoId) {
+        this.photoId = photoId;
     }
+
 
     public String getEarthDate() {
         return earthDate;

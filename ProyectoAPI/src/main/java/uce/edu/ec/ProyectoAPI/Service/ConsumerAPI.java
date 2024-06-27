@@ -41,7 +41,7 @@ public class ConsumerAPI {
 
                 for (JsonNode photoNode : photosNode) {
                     MarsRoverPhoto photo = new MarsRoverPhoto();
-                    photo.setPhotoid(photoNode.path("id").asInt());
+                    photo.setPhotoId(photoNode.path("id").asInt());
                     photo.setImageUrl(photoNode.path("img_src").asText());
                     photo.setEarthDate(photoNode.path("earth_date").asText());
 

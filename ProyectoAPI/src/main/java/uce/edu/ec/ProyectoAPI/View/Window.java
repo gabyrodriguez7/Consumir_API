@@ -37,11 +37,12 @@ public class Window extends JFrame {
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("SansSerif", Font.PLAIN, 16));
 
-        panelMiniaturas = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelMiniaturas.setPreferredSize(new Dimension(1000, 10));
+        panelMiniaturas = new JPanel();
+        panelMiniaturas.setLayout(new BoxLayout(panelMiniaturas, BoxLayout.Y_AXIS)); // Usar BoxLayout para el panel verticalmente
+
         scrollPane = new JScrollPane(panelMiniaturas);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         agregarComponentes();
         setVisible(true);
@@ -53,7 +54,7 @@ public class Window extends JFrame {
         JPanel panelSeleccion = new JPanel();
         panelSeleccion.add(new JLabel("Sol:"));
         panelSeleccion.add(comboSol);
-        panelSeleccion.add(new JLabel("Cámara:"));
+        panelSeleccion.add(new JLabel("Camara:"));
         panelSeleccion.add(comboCamara);
 
         JPanel panelInformacion = new JPanel(new BorderLayout());
@@ -75,10 +76,10 @@ public class Window extends JFrame {
     private void agregarBoton(JPanel panel, String nombreRover) {
         JButton boton = new JButton(nombreRover);
         boton.addActionListener(e -> {
-            int sol = (int) comboSol.getSelectedItem();
-            String camara = (String) comboCamara.getSelectedItem();
+            int sol = comboSol.getItemAt(comboSol.getSelectedIndex());
+            String camara = comboCamara.getItemAt(comboCamara.getSelectedIndex());
 
-            areaInfo.setText("Busqueda: fotos para el rover " + nombreRover + ", cámara " + camara + ", sol " + sol + "...\n");
+            areaInfo.setText("Buscando fotos para el rover " + nombreRover + ", cámara " + camara + ", sol " + sol + "...\n");
             limpiarPanelMiniaturas();
             new Thread(() -> {
                 try {
@@ -98,21 +99,24 @@ public class Window extends JFrame {
     }
 
     private void mostrarFotos(Map<String, List<MarsRoverPhoto>> fotosPorCamara, String nombreRover, String camara, int sol) {
-        limpiarPanelMiniaturas();
-
         fotosPorCamara.values().forEach(photos -> photos.forEach(photo -> {
             JPanel panelFoto = crearPanelFoto(photo);
             panelMiniaturas.add(panelFoto);
         }));
 
-        panelMiniaturas.revalidate();
-        panelMiniaturas.repaint();
+        // Asegura que el JScrollPane se ajuste automáticamente al contenido vertical
+        SwingUtilities.invokeLater(() -> {
+            panelMiniaturas.revalidate();
+            panelMiniaturas.repaint();
+            scrollPane.revalidate(); // Revalidar el scrollPane para ajustar la barra de desplazamiento
+            scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+        });
     }
 
     private JPanel crearPanelFoto(MarsRoverPhoto foto) {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel etiquetaInfo = new JLabel("<html>ID: " + foto.getPhotoid() + ", Fecha: " + foto.getEarthDate() +
+        JLabel etiquetaInfo = new JLabel("<html>ID: " + foto.getPhotoId() + ", Fecha: " + foto.getEarthDate() +
                 ", <a href='" + foto.getImageUrl() + "'>URL: " + foto.getImageUrl() + "</a></html>");
         etiquetaInfo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         etiquetaInfo.addMouseListener(new MouseAdapter() {
@@ -170,24 +174,18 @@ public class Window extends JFrame {
                         }
                     }
                     if (contieneImagen) {
-                        SwingUtilities.invokeLater(() -> {
-                            areaInfo.append("La URL: "+ urlImagen +" es una página web que puede no ser una imagen directa.\n");
-                        });
+                        SwingUtilities.invokeLater(() -> areaInfo.append("La URL: " + urlImagen + " es una página web que puede no ser una imagen directa.\n"));
                     } else {
-                        SwingUtilities.invokeLater(() -> {
-                            areaInfo.append("La URL no corresponde a una imagen directa o no contiene imágenes.\n");
-                        });
+                        SwingUtilities.invokeLater(() -> areaInfo.append("La URL no corresponde a una imagen directa o no contiene imágenes.\n"));
                     }
                     return null;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-
             return null;
         }
     }
-
 
     private void abrirPaginaWeb(String url) {
         if (Desktop.isDesktopSupported()) {
@@ -222,4 +220,7 @@ public class Window extends JFrame {
         panelMiniaturas.repaint();
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Window::new);
+    }
 }
