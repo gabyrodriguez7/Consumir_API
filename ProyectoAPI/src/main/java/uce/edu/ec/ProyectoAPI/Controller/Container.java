@@ -1,7 +1,8 @@
 package uce.edu.ec.ProyectoAPI.Controller;
 
+import uce.edu.ec.ProyectoAPI.Interface.IMarsRover;
 import uce.edu.ec.ProyectoAPI.Model.Curiosity;
-import uce.edu.ec.ProyectoAPI.Model.MarsRover;
+import uce.edu.ec.ProyectoAPI.Model.MarsFilter;
 import uce.edu.ec.ProyectoAPI.Model.Opportunity;
 import uce.edu.ec.ProyectoAPI.Model.Spirit;
 import uce.edu.ec.ProyectoAPI.Service.ConsumerAPI;
@@ -17,22 +18,22 @@ public class Container {
         this.apiService = new ConsumerAPI();
     }
 
-    public uce.edu.ec.ProyectoAPI.Interface.MarsRover getCuriosity() {
+    public IMarsRover getCuriosity() {
         return new Curiosity(apiService);
     }
 
-    public uce.edu.ec.ProyectoAPI.Interface.MarsRover getOpportunity() {
+    public IMarsRover getOpportunity() {
         return new Opportunity(apiService);
     }
 
-    public uce.edu.ec.ProyectoAPI.Interface.MarsRover getSpirit() {
+    public IMarsRover getSpirit() {
         return new Spirit(apiService);
     }
 
-    public Map<String, List<MarsRover>> fetchAndPrintPhotosByCameraAndSol(String roverName, String camera, int sol, JTextArea infoTextArea) {
-        uce.edu.ec.ProyectoAPI.Interface.MarsRover rover = getRoverByName(roverName);
+    public Map<String, List<MarsFilter>> fetchAndPrintPhotosByCameraAndSol(String roverName, String camera, int sol, JTextArea infoTextArea) {
+        IMarsRover rover = getRoverByName(roverName);
         if (rover != null) {
-            Map<String, List<MarsRover>> photos = rover.fetchPhotosByCameraAndSol(camera, sol);
+            Map<String, List<MarsFilter>> photos = rover.fetchPhotosByCameraAndSol(camera, sol);
             if (photos.isEmpty()) {
                 infoTextArea.setText("\nNo se encontraron fotos para el rover " + roverName + ", camara " + camera + " y sol " + sol + "\n");
             }
@@ -43,7 +44,7 @@ public class Container {
     }
     
 
-    private uce.edu.ec.ProyectoAPI.Interface.MarsRover getRoverByName(String roverName) {
+    private IMarsRover getRoverByName(String roverName) {
         switch (roverName.toLowerCase()) {
             case "curiosity":
                 return getCuriosity();
